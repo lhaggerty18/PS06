@@ -1,6 +1,6 @@
 ---
 title: "STAT/MATH 495: Problem Set 06"
-author: "WRITE YOUR NAME HERE"
+author: "Luke Haggerty"
 date: "2017-10-17"
 output:
   html_document:
@@ -30,7 +30,7 @@ library(knitr)
 
 # Collaboration
 
-Please indicate who you collaborated with on this assignment: 
+Please indicate who you collaborated with on this assignment: Individual
 
 
 
@@ -68,7 +68,7 @@ data" function. Random in terms of both:
 ```{r}
 generate_sample <- function(f, n, sigma) {
   sample <- data_frame(
-    x = runif(n = n, min = 0, max = 1),
+    x = runif(n, min = 0, max = 1),
     f_x = f(x),
     epsilon = rnorm(n = n, mean = 0, sd = sigma),
     y = f_x + epsilon
@@ -96,6 +96,26 @@ n_sample <- 10000
 # Computation
 
 ```{r}
+train_set <- generate_sample(f,n,sigma)
+
+ggplot(data = train_set, aes(x = x, y = y)) + geom_point()
+
+model1<-smooth.spline(train_set$x, train_set$y, df=2)
+model2<-smooth.spline(train_set$x, train_set$y, df=99)
+
+
+model1predict <- predict(model1, x=x0)
+model2predict <- predict(model2, x=x0)
+
+MSE1<- (x0^2-model1predict$y)^2
+MSE2<- (x0^2-model2predict$y)^2
+Bias1 <- model1predict$y - x0^2
+Bias2 <- model2predict$y - x0^2
+
+MSE1
+MSE2
+Bias1
+Bias2
 
 ```
 
@@ -131,6 +151,6 @@ $x$ in this example, and not just for $$\mbox{MSE}\left[\widehat{f}(x_0)\right]
 
 **Answers**:
 
-1.
-1.
-1.
+1. The more complex model should have a higher bias and lower variance than the less complex model.
+1. Because there was only one point, I used simpler formulas for the MSE and Bias. For more points you would have to code the full formula, then use a for loop to check each point and record the results.
+1. Because it is just one point, I would choose the df=2 model, because it is not as complex of a model.
